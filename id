@@ -1,0 +1,75 @@
+import json
+import time
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import requests
+
+# -------------------------------------------------------------
+# CONFIGURAZIONE
+# -------------------------------------------------------------
+# Inserisci qui il Token del tuo Bot Telegram preso da @BotFather
+BOT_TOKEN = "8221208999:AAE52kQ-ouyyFMPv6D0JqMFChMqdG_UWt2c"
+# Inserisci qui l'URL dell'API esterna per le ricerche
+EXTERNAL_API_URL = ""
+
+BASE_URL = f"https://api.telegram.org/bot{8221208999:AAE52kQ-ouyyFMPv6D0JqMFChMqdG_UWt2c}"
+
+# Dizionario per gestire lo stato della conversazione per ogni utente
+# Stati possibili: None (default), 'AWAITING_PHONE', 'AWAITING_USERNAME', 'AWAITING_SOCIAL_ID'
+USER_STATES = {}
+
+# -------------------------------------------------------------
+# FUNZIONI API DI TELEGRAM
+# -------------------------------------------------------------
+def send_message(chat_id, text, reply_markup=None):
+    """Invia un messaggio a una chat specifica usando l'endpoint sendMessage."""
+    url = f"{BASE_URL}/sendMessage"
+    payload = {
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML"
+    }
+    if reply_markup:
+        payload["reply_markup"] = json.dumps(reply_markup)
+        
+    try:
+        response = requests.post(url, json=payload)
+        return response.json()
+    except Exception as e:
+        print(f"Errore nell'invio del messaggio: {e}")
+        return None
+
+def handle_updates(updates):
+    """Elabora i messaggi in entrata ricevuti da Telegram."""
+    for update in updates:
+        if "message" not in update or "text" not in update["message"]:
+            continue
+            
+        message = update["message"]
+        chat_id = message["chat"]["id"]
+        text = message["text"].strip()
+        
+        # 1. Gestione comando /start
+        if text == "/start":
+            USER_STATES[chat_id] = None  # Reset dello stato
+            welcome_text = "Benvenuto! Scegli un'opzione dalla tastiera in basso per avviare la ricerca OSINT."
+            
+            # Tastiera personalizzata con i tre pulsanti richiesti
+            keyboard = {
+                "keyboard": [
+                    [{"text": "📱 Phone Lookup"}, {"text": "🔎 username"}],
+                    [{"text": "🕵️ id"}]
+                ],
+                "resize_keyboard": True,
+                "one_time_keyboard": False
+            }
+            send_message(chat_id, welcome_text, reply_markup=keyboard)
+            
+        # 2. Gestione pressione del pulsante "📱 Phone Lookup"
+        elif text == "📱 Phone Lookup":
+            USER_STATES[chat_id] = 'AWAITING_PHONE'
+            send_message(chat_id, "📞 Scrivi un numero di telefono:")
+            
+        # 3. Gestione pressione del pulsante "🔎 username"
+        elif text == "🔎 username":
+            USER_STATES
