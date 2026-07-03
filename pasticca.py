@@ -12,7 +12,7 @@ BOT_TOKEN = "8221208999:AAE52kQ-ouyyFMPv6D0JqMFChMqdG_UWt2c"
 # Replace with your actual External API URL
 EXTERNAL_API_URL = "https://api.telegram.org/bot{BOT_TOKEN}"
 
-BASE_URL = f"https://api.telegram.org/bot{8221208999:AAE52kQ-ouyyFMPv6D0JqMFChMqdG_UWt2c}"
+BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 ADMIN_ID = 8901052436
 
