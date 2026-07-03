@@ -12,7 +12,7 @@ BOT_TOKEN = "8221208999:AAE52kQ-ouyyFMPv6D0JqMFChMqdG_UWt2c"
 # Inserisci qui l'URL dell'API esterna per le ricerche
 EXTERNAL_API_URL = ""
 
-BASE_URL = f"https://api.telegram.org/bot{8221208999:AAE52kQ-ouyyFMPv6D0JqMFChMqdG_UWt2c}"
+BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 # Dizionario per gestire lo stato della conversazione per ogni utente
 # Stati possibili: None (default), 'AWAITING_PHONE', 'AWAITING_USERNAME', 'AWAITING_SOCIAL_ID'
